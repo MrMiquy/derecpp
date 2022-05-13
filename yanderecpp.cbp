@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="yanderecpp" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/yanderecpp" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/yanderecpp" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Linker>
+			<Add library="SDL2" />
+			<Add library="SDL2_image" />
+			<Add library="SDL2_ttf" />
+		</Linker>
+		<Unit filename="headers/Animation.h" />
+		<Unit filename="headers/App.h" />
+		<Unit filename="headers/Border.h" />
+		<Unit filename="headers/Circle.h" />
+		<Unit filename="headers/Ellipse.h" />
+		<Unit filename="headers/Image.h" />
+		<Unit filename="headers/Label.h" />
+		<Unit filename="headers/UI.h" />
+		<Unit filename="headers/Widget.h" />
+		<Unit filename="sources/Animation.cpp" />
+		<Unit filename="sources/App.cpp" />
+		<Unit filename="sources/Border.cpp" />
+		<Unit filename="sources/Circle.cpp" />
+		<Unit filename="sources/Ellipse.cpp" />
+		<Unit filename="sources/Image.cpp" />
+		<Unit filename="sources/Label.cpp" />
+		<Unit filename="sources/UI.cpp" />
+		<Unit filename="sources/Widget.cpp" />
+		<Unit filename="sources/main.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
