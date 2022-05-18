@@ -24,6 +24,8 @@ App::App(const char* title, int xPos, int yPos, int width, int height, uint FLAG
         window = SDL_CreateWindow(title, xPos, yPos, width, height, FLAG);
         if (window) printf("Window created\n");
 
+        UI_Init();
+
         setRenderer(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
         if (renderer) printf("Renderer created\n");
 
@@ -68,13 +70,6 @@ void App::handleEvents() {
         default:
             break;
         }
-
-    if (animate()) neededRender = true;
-
-    if (neededRender) {
-        neededRender = false;
-        render();
-    }
 }
 
 void App::update() {
@@ -82,25 +77,34 @@ void App::update() {
 
     if (mouseChanged) {
         if (mouse) {
-            for (Widget* widget : UIElements) {
+            for (Widget* widget : concat(UIChildren, UIElements)) {
                 if (widget->pressed(mouseX, mouseY)) {
+                    lastPressedWidget = widget;
                     neededRender = true;
+                    break;
                 }
             }
         } else {
-            for (Widget* widget : UIElements) {
-                if (!widget->pressed(mouseX, mouseY)) {
+            for (Widget* widget : concat(UIChildren, UIElements)) {
+                if (!widget->pressed(mouseX, mouseY, false)) {
                     if (widget->collisse(mouseX, mouseY)) {
                         widget->setMouseState(mouseHover);
                     } else {
                         widget->setMouseState(mouseNone);
                     }
+                    lastPressedWidget = NULL;
                     neededRender = true;
                 }
             }
         }
         mouseChanged = false;
-    } else if (skipFrame < 4) {
+    } else if (animate()) {
+        neededRender = true;
+    } else if (mouse && lastPressedWidget != NULL && lastPressedWidget->isDraggable()) {
+        lastPressedWidget->setGeometry({mouseX - lastPressedWidget->getGeometry().w / 2, mouseY - lastPressedWidget->getGeometry().h / 2, lastPressedWidget->getGeometry().w, lastPressedWidget->getGeometry().h});
+        neededRender = true;
+    }
+    if (skipFrame < 2) {
         skipFrame++;
         return;
     }
@@ -109,7 +113,7 @@ void App::update() {
     if (mouseX != mouseXo && mouseY != mouseYo) {
         mouseXo = mouseX;
         mouseYo = mouseY;
-        for (Widget* widget : UIElements) {
+        for (Widget* widget : concat(UIChildren, UIElements)) {
             if (widget->hover(mouseX, mouseY)) {
                 neededRender = true;
                 break;

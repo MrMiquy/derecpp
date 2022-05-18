@@ -4,6 +4,7 @@ Image::Image() {
 }
 
 Image::~Image() {
+    SDL_DestroyTexture(texture);
 }
 
 void Image::setImage(std::string _filename) {

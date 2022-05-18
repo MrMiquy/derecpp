@@ -4,6 +4,12 @@
 #ifndef WIDGET
 #define WIDGET
 
+enum MouseState {
+    mouseNone,
+    mouseHover,
+    mousePressed,
+};
+
 class Colorize {
 public:
     Colorize();
@@ -22,16 +28,12 @@ public:
     void setPressedAlpha(Uint8 value);
     Uint8 getPressedAlpha();
 
+    SDL_Color getColorByState(MouseState ms);
+
 protected:
     SDL_Color color = {0, 0, 0, 255};
     SDL_Color hoverColor = {20, 20, 20, 255};
     SDL_Color pressedColor = {30, 30, 30, 255};
-};
-
-enum MouseState {
-    mouseNone,
-    mouseHover,
-    mousePressed,
 };
 
 class Widget {
@@ -41,14 +43,16 @@ public:
 
     virtual void setRenderer(SDL_Renderer* renderer);
     void setEnable(bool isEnable);
+    void setDraggable(bool value);
     void setMouseState(MouseState state);
-    void setGeometry(SDL_Rect geometry);
+    virtual void setGeometry(SDL_Rect geometry);
     void bindHoverFunction(std::function<void()> function);
     void bindPressedFunction(std::function<void()> function);
 
     MouseState getMouseState();
     SDL_Rect getGeometry();
     bool isEnable();
+    bool isDraggable();
     SDL_Rect* geometryReference();
     int* xReference();
     int* yReference();
@@ -56,7 +60,7 @@ public:
     int* heightReference();
 
     bool hover(int x, int y);                                 // is mouse over
-    bool pressed(int x, int y);                              // is mouse pressed
+    bool pressed(int x, int y, bool press = true);                              // is mouse pressed
     bool collisse(int x, int y);
     void invertEnable();
 
@@ -68,6 +72,7 @@ protected:
     SDL_Rect geometry = {0, 0, 0, 0};
     SDL_Renderer* renderer;
     bool enable = true;
+    bool drag = false;
 
     void addX(int value);
     void addY(int value);

@@ -23,6 +23,7 @@ public:
     Label();
     ~Label();
 
+    void setRenderer(SDL_Renderer* renderer);
     void setText(std::string text);
     void setDock(Dock dock);
     void addMargin(SDL_Rect margin);
@@ -32,11 +33,16 @@ public:
     Dock getDock();
     SDL_Rect getMargin();
 
+    void render();
+
 protected:
     std::string text;
     SDL_Rect margin;
     Dock dock;
-    TTF_Font* font;
+    TTF_Font* font = NULL;
     SDL_Texture* texture;
+
+    void applyTexture();
+    void updateDock();
 
 };

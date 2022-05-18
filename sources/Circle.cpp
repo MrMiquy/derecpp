@@ -6,6 +6,13 @@ Circle::Circle() {
 Circle::~Circle() {
 }
 
+void Circle::setGeometry(SDL_Rect _geometry) {
+    x = geometry.x = _geometry.x;
+    y = geometry.y = _geometry.y;
+    geometry.w = _geometry.w;
+    geometry.h = _geometry.h;
+}
+
 void Circle::render() {
     x += geometry.w / 2;
     y += geometry.h / 2;

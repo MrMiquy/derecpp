@@ -1,4 +1,5 @@
 *.depend
 *.layout
+*.temp
 /obj
 /bin

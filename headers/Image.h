@@ -20,7 +20,7 @@ public:
     void render();
 
 protected:
-    SDL_Texture* texture;
+    SDL_Texture* texture = NULL;
 
     SDL_Texture* loadTexture();
 

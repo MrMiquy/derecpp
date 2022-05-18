@@ -61,6 +61,14 @@ void Widget::setEnable(bool isEnable) {
     enable = isEnable;
 }
 
+void Widget::setDraggable(bool value) {
+    drag = value;
+}
+
+bool Widget::isDraggable() {
+    return drag;
+}
+
 void Widget::invertEnable() {
     enable = !enable;
 }
@@ -107,6 +115,19 @@ void Colorize::setPressedAlpha(Uint8 value) {
     pressedColor.a = value;
 }
 
+SDL_Color Colorize::getColorByState(MouseState ms) {
+    switch (ms) {
+        case mouseNone:
+            return color;
+        case mouseHover:
+            return hoverColor;
+        case mousePressed:
+            return pressedColor;
+        default:
+            return color;
+    }
+}
+
 Uint8 Colorize::getAlpha() {
     return color.a;
 }
@@ -144,8 +165,8 @@ bool Widget::hover(int _x, int _y) {
     return false;
 }
 
-bool Widget::pressed(int _x, int _y) {
-    if (collisse(_x, _y) && ms != mousePressed) {
+bool Widget::pressed(int _x, int _y, bool press) {
+    if (collisse(_x, _y) && ms != mousePressed && press) {
         ms = mousePressed;
         if (pressedFunc != nullptr)
             pressedFunc();

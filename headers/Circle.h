@@ -15,6 +15,7 @@ public:
     int32_t getRadius();
     int32_t getDiameter();
 
+    void setGeometry(SDL_Rect _geometry);
     void setFill(bool value);
     bool isFill();
 
