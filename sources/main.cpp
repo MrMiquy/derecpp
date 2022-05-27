@@ -1,12 +1,13 @@
 #include "../headers/App.h"
 
-App* app = nullptr;
+//App* app = nullptr;
 
 const unsigned short frameDelay = 10;
 
 int main(int argc, char** argv)
 {
-    App app("Yande.re", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 805, 500, SDL_WINDOW_RESIZABLE);
+    App app;
+    app.initUI("Yande.re", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 805, 500, SDL_WINDOW_RESIZABLE);
 
     Uint32 frameStart;
     int frameTime;
@@ -23,7 +24,6 @@ int main(int argc, char** argv)
             SDL_Delay(frameDelay - frameTime);
     }
 
-    app.clean();
     return 0;
 }
 

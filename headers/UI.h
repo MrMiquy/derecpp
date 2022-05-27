@@ -12,14 +12,17 @@ public:
     UI();
     ~UI();
 
-    void UI_Init();
+    void initUI(const char* title, int xPos, int yPos, int width, int height, uint FLAG);
+    void initElements();
+    bool isRunning();
 
 protected:
     // Elements
 
     // Borders
     Border b;
-    Animation bWidth;
+    intAnimation bWidth;
+    ColorAnimation bColor;
 
     // Cirles
     Circle c;
@@ -41,9 +44,16 @@ protected:
     std::vector<Widget*> UIChildren;
 
     void setRenderer(SDL_Renderer* renderer);
+
     SDL_Renderer* renderer;
+    SDL_Point winSize = {0, 0};
+    SDL_Point winPos = {0, 0};
+    SDL_Window* window;
+    SDL_Surface* surface;
+    bool run = false;
 
 private:
+
     void addChild(Parent* parentWidget, Widget* childWidget);
     void addElement(Widget* element);
     void addAnimation(Animation* anim);

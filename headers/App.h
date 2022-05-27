@@ -10,15 +10,14 @@ template <typename T> std::vector<T> concat(std::vector<T> &a, std::vector<T> &b
     return ret;
 }
 
-class App : protected UI {
+class App : public UI {
 public:
-    App(const char* title, int xPos, int yPos, int width, int height, uint resizable);
+    App();
+    ~App();
 
     void handleEvents();
     void update();
     void render();
-    void clean();
-    bool isRunning();
 
     SDL_Point getWindowSize();
     SDL_Point getWindowPos();
@@ -26,17 +25,11 @@ public:
 private:
     int mouseX, mouseY;
     int mouseXo, mouseYo;
-    bool run = false;
     bool neededRender = false;
     bool mouse = false;
     bool mouseChanged = false;
     int skipFrame = 0;
     int motions = 0;
-
-    SDL_Point winSize = {0, 0};
-    SDL_Point winPos = {0, 0};
-    SDL_Window* window;
-    SDL_Surface* surface;
 
     Widget* lastPressedWidget = NULL;
 };

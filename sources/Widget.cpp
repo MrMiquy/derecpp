@@ -128,6 +128,10 @@ SDL_Color Colorize::getColorByState(MouseState ms) {
     }
 }
 
+SDL_Color* Colorize::colorReference() {
+    return &color;
+}
+
 Uint8 Colorize::getAlpha() {
     return color.a;
 }

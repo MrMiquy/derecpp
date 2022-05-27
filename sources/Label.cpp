@@ -15,6 +15,11 @@ void Label::render() {
     SDL_RenderCopy(renderer, texture, NULL, &geometry);
 }
 
+void Label::setGeometry(SDL_Rect _geometry) {
+    Widget::setGeometry(_geometry);
+    nativeGeometry = _geometry;
+}
+
 void Label::setDock(Dock d) {
     dock = d;
 }

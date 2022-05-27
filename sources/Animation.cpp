@@ -1,19 +1,21 @@
 #include "../headers/Animation.h"
 
-Animation::Animation() {
-}
-
-Animation::~Animation() {
-}
-
-bool Animation::animate() {
+bool intAnimation::animate() {
     if (animating) {
-        if (reversed == false) {
-            *value = counter + from;
-            if (*value >= to) stop();
+        if (from <= to) {
+            if (*value >= to) {
+                stop();
+                *value = to;
+            } else {
+                *value = counter * to / duration / (to / duration) / duration + from;
+            }
         } else {
-            *value = -counter + from;
-            if (*value <= to) stop();
+            if (*value <= to) {
+                stop();
+                *value = to;
+            } else {
+                *value = -(counter * to / duration / (to / duration) / duration) + from;
+            }
         }
         counter++;
         return true;
@@ -21,47 +23,82 @@ bool Animation::animate() {
     return false;
 }
 
-void Animation::stop() {
-    from = to;
-    counter = 1;
-    animating = false;
-}
-
-void Animation::play() {
-    if (animating == false) {
-        *value = from;
-        animating = true;
+bool uInt8Animation::animate() {
+    if (animating) {
+        if (from <= to) {
+            if (*value >= to) {
+                stop();
+                *value = to;
+            } else {
+                *value = counter * to / duration / (to / duration) / duration + from;
+            }
+        } else {
+            if (*value <= to) {
+                stop();
+                *value = to;
+            } else {
+                *value = -(counter * to / duration / (to / duration) / duration) + from;
+            }
+        }
+        counter++;
+        return true;
     }
+    return false;
 }
 
-bool Animation::isAnimating() {
-    return animating;
-}
-
-void Animation::setAcceleration(int bAcc, int eAcc) {
-    beginAcceleration = bAcc;
-    endAcceleration = eAcc;
-}
-
-void Animation::setDuration(unsigned int _duration) {
-    if (_duration == 0) duration++;
-    duration = _duration;
-}
-
-unsigned int Animation::getDuration() {
-    return duration;
-}
-
-void Animation::setRange(int _from, int _to) {
-    if (_from > _to) {
-        reversed = true;
-    } else {
-        reversed = false;
-    }
+void ColorAnimation::setRange(SDL_Color _from, SDL_Color _to) {
     from = _from;
     to = _to;
+    r.setRange(from.r, to.r);
+    g.setRange(from.g, to.g);
+    b.setRange(from.b, to.b);
+    a.setRange(from.a, to.a);
 }
 
-void Animation::setValue(int *valueToAnimate) {
-    value = valueToAnimate;
+void ColorAnimation::setDuration(unsigned int ms) {
+    duration = ms;
+    r.setDuration(ms);
+    g.setDuration(ms);
+    b.setDuration(ms);
+    a.setDuration(ms);
+}
+
+void ColorAnimation::setValue(SDL_Color* v) {
+    value = v;
+    r.setValue(&value->r);
+    g.setValue(&value->g);
+    b.setValue(&value->b);
+    a.setValue(&value->a);
+}
+
+void ColorAnimation::play() {
+    animating = true;
+    r.play();
+    g.play();
+    b.play();
+    a.play();
+}
+
+void ColorAnimation::stop() {
+    counter = 1;
+    animating = false;
+    r.stop();
+    g.stop();
+    b.stop();
+    a.stop();
+}
+
+bool ColorAnimation::animate() {
+    if (animating) {
+        bool neededRender = false;
+
+        if (r.animate()) neededRender = true;
+        if (g.animate()) neededRender = true;
+        if (b.animate()) neededRender = true;
+        if (a.animate()) neededRender = true;
+        printf("color render: %d\n", neededRender);
+
+        return animating = neededRender;
+    }
+    return false;
 }

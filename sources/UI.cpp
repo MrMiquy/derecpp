@@ -1,14 +1,15 @@
 #include "../headers/UI.h"
 
-void UI::UI_Init() {
+void UI::initElements() {
     art.setImage("art.png");
     art.setPosition({160, 20});
     art.setDraggable(true);
     addChild(&b, &art);
 
-    b.setGeometry({40, 40, 25, 250});
+    b.setGeometry({40, 40, 250, 250});
     b.setHoverColor({50, 50, 50, 255});
     b.setPressedColor({150, 150, 150, 255});
+    b.Colorizing(false);
     addElement(&b);
     b.bindPressedFunction(std::bind(&UI::buttonPressed, this));
     b.bindHoverFunction(std::bind(&UI::buttonHover, this));
@@ -34,22 +35,55 @@ void UI::UI_Init() {
     l.setDraggable(true);
     addElement(&l);
 
-    bWidth.setRange(300, 300);
-    bWidth.setDuration(100);
-    bWidth.setValue(b.widthReference());
+    bWidth.setDuration(500);
+    bWidth.setValue(b.xReference());
     addAnimation(&bWidth);
+
+    bColor.setDuration(500);
+    bColor.setRange(b.getPressedColor(), b.getColor());
+    bColor.setValue(b.colorReference());
+    addAnimation(&bColor);
+}
+
+void UI::initUI(const char* title, int xPos, int yPos, int width, int height, uint FLAG) {
+    if (SDL_Init(SDL_INIT_VIDEO) == 0) {
+        printf("Video initialised\n");
+
+        if (TTF_Init() == 0) printf("fonts initialised\n");
+
+        if (IMG_Init(0) == 0) printf("images initialised\n");
+
+        window = SDL_CreateWindow(title, xPos, yPos, width, height, FLAG);
+        if (window) printf("Window created\n");
+
+        initElements();
+
+        setRenderer(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
+        if (renderer) printf("Renderer created\n");
+
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+        surface = SDL_GetWindowSurface(window);
+
+        run = true;
+    }
 }
 
 void UI::buttonPressed() {
+    if (!bColor.isAnimating()) {
+        bColor.setRange(bColor.getRangeTo(), bColor.getRangeFrom());
+        bColor.play();
+    }
+
     if (!bWidth.isAnimating()) {
-        bWidth.setRange(b.getGeometry().w, b.getGeometry().w + 30);
+        bWidth.setRange(b.getGeometry().x, b.getGeometry().x + 50);
         bWidth.play();
     }
 }
 
 void UI::buttonHover() {
-    if (!bWidth.isAnimating() && b.getGeometry().w > 30) {
-        bWidth.setRange(b.getGeometry().w, b.getGeometry().w - 30);
+    if (!bWidth.isAnimating() && b.getGeometry().x > -150) {
+        bWidth.setRange(b.getGeometry().x, b.getGeometry().x - 50);
         bWidth.play();
     }
 }
@@ -58,6 +92,10 @@ UI::UI() {
 }
 
 UI::~UI() {
+    printf("quiting...\n");
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
 }
 
 void UI::setRenderer(SDL_Renderer* _renderer) {
@@ -98,3 +136,5 @@ void UI::addChild(Parent* parent, Widget* child) {
     parent->addChild(child);
     UIChildren.push_back(child);
 }
+
+bool UI::isRunning() { return run; }

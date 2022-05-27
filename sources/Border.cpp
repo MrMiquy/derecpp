@@ -12,7 +12,7 @@ void Border::render() {
         SDL_Texture* auxtexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, geometry.w, geometry.h);
         SDL_SetTextureBlendMode(auxtexture, SDL_BLENDMODE_BLEND);
 
-        if (ms == mouseNone) {
+        if (ms == mouseNone || useColorize == false) {
             SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
         } else if (ms == mouseHover) {
             SDL_SetRenderDrawColor(renderer, hoverColor.r, hoverColor.g, hoverColor.b, hoverColor.a);

@@ -13,29 +13,7 @@ bool accessable(char c) {
     return false;
 }
 
-App::App(const char* title, int xPos, int yPos, int width, int height, uint FLAG) {
-    if (SDL_Init(SDL_INIT_VIDEO) == 0) {
-        printf("Video initialised\n");
-
-        if (TTF_Init() == 0) printf("fonts initialised\n");
-
-        if (IMG_Init(0) == 0) printf("images initialised\n");
-
-        window = SDL_CreateWindow(title, xPos, yPos, width, height, FLAG);
-        if (window) printf("Window created\n");
-
-        UI_Init();
-
-        setRenderer(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
-        if (renderer) printf("Renderer created\n");
-
-        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
-        surface = SDL_GetWindowSurface(window);
-
-        run = true;
-        //SDL_StartTextInput();
-    }
+App::App() {
 }
 
 void App::handleEvents() {
@@ -139,14 +117,11 @@ void App::render() {
     SDL_RenderPresent(renderer);
 }
 
-void App::clean() {
+App::~App() {
     //SDL_StopTextInput();
     SDL_FreeSurface(surface);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    TTF_Quit();
-    IMG_Quit();
-    SDL_Quit();
     printf("App cleaned\n");
 }
 
@@ -157,5 +132,3 @@ SDL_Point App::getWindowSize() {
 SDL_Point App::getWindowPos() {
     return winPos;
 }
-
-bool App::isRunning() { return run; }

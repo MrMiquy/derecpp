@@ -28,9 +28,13 @@ public:
     void setPressedAlpha(Uint8 value);
     Uint8 getPressedAlpha();
 
+    SDL_Color* colorReference();
+
+    void Colorizing(bool value) {useColorize = value;}
     SDL_Color getColorByState(MouseState ms);
 
 protected:
+    bool useColorize = true;
     SDL_Color color = {0, 0, 0, 255};
     SDL_Color hoverColor = {20, 20, 20, 255};
     SDL_Color pressedColor = {30, 30, 30, 255};
