@@ -12,30 +12,12 @@ public:
     UI();
     ~UI();
 
-    void initUI(const char* title, int xPos, int yPos, int width, int height, uint FLAG);
-    void initElements();
+    void init(const char* title, int xPos, int yPos, int width, int height, uint FLAG);
     bool isRunning();
+    void quit();
 
 protected:
-    // Elements
-
-    // Borders
-    Border b;
-    intAnimation bWidth;
-    ColorAnimation bColor;
-
-    // Cirles
-    Circle c;
-
-    // Ellipses
-    Ellipse e;
-
-    // Images
-    Image art;
-
-    // Labels
-    Label l;
-
+    virtual void initElements();
     void renderUI();
     bool animate();
 
@@ -52,12 +34,7 @@ protected:
     SDL_Surface* surface;
     bool run = false;
 
-private:
-
     void addChild(Parent* parentWidget, Widget* childWidget);
     void addElement(Widget* element);
     void addAnimation(Animation* anim);
-
-    void buttonPressed();
-    void buttonHover();
 };

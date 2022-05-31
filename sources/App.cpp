@@ -40,7 +40,7 @@ void App::handleEvents() {
                   || event.window.event == SDL_WINDOWEVENT_RESTORED)
             {
                 SDL_GetWindowPosition(window, &winPos.x, &winPos.y);
-                SDL_GetWindowSize(window, &winSize.x, &winSize.y);
+                SDL_GetWindowSize(window,  &winSize.x,  &winSize.y);
                 backgroundGeometry = {0, 0, winSize.x, winSize.y};
                 neededRender = true;
             };
@@ -113,6 +113,7 @@ void App::render() {
     SDL_RenderFillRect(renderer, &backgroundGeometry);
     // --------------------------
     renderUI();
+    printf("rendering\n");
 
     SDL_RenderPresent(renderer);
 }
@@ -123,6 +124,18 @@ App::~App() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     printf("App cleaned\n");
+}
+
+void App::cycle() {
+    frameStart = SDL_GetTicks();
+
+    handleEvents();
+    update();
+
+    frameTime = SDL_GetTicks() - frameStart;
+
+    if (frameDelay > frameTime)
+        SDL_Delay(frameDelay - frameTime);
 }
 
 SDL_Point App::getWindowSize() {

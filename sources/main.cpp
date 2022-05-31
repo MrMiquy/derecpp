@@ -1,28 +1,26 @@
 #include "../headers/App.h"
 
-//App* app = nullptr;
+void runApp() {
+    App app;
 
-const unsigned short frameDelay = 10;
+    app.init("Yande.re", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 805, 500, SDL_WINDOW_RESIZABLE);
+
+    while (app.isRunning()) {
+        app.cycle();
+    }
+}
 
 int main(int argc, char** argv)
 {
-    App app;
-    app.initUI("Yande.re", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 805, 500, SDL_WINDOW_RESIZABLE);
+    SDL_Init(SDL_INIT_VIDEO);
+    TTF_Init();
+    IMG_Init(0);
 
-    Uint32 frameStart;
-    int frameTime;
+    runApp();
 
-    while(app.isRunning()) {
-        frameStart = SDL_GetTicks();
-
-        app.handleEvents();
-        app.update();
-
-        frameTime = SDL_GetTicks() - frameStart;
-
-        if (frameDelay > frameTime)
-            SDL_Delay(frameDelay - frameTime);
-    }
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
 
     return 0;
 }

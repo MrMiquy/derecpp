@@ -1,7 +1,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
-#include "UI.h"
+#include <vector>
+#include <functional>
+#include "MainWindow.h"
 
 template <typename T> std::vector<T> concat(std::vector<T> &a, std::vector<T> &b) {
     std::vector<T> ret = std::vector<T>();
@@ -10,11 +12,12 @@ template <typename T> std::vector<T> concat(std::vector<T> &a, std::vector<T> &b
     return ret;
 }
 
-class App : public UI {
+class App : public MainWindow {
 public:
     App();
     ~App();
 
+    void cycle();
     void handleEvents();
     void update();
     void render();
@@ -30,6 +33,9 @@ private:
     bool mouseChanged = false;
     int skipFrame = 0;
     int motions = 0;
+    const unsigned short frameDelay = 10;
+    unsigned int frameStart;
+    int frameTime;
 
     Widget* lastPressedWidget = NULL;
 };

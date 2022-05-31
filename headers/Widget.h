@@ -1,8 +1,8 @@
 #include <SDL2/SDL.h>
 #include <functional>
 
-#ifndef WIDGET
-#define WIDGET
+#ifndef __WIDGET
+#define __WIDGET
 
 enum MouseState {
     mouseNone,
@@ -30,7 +30,7 @@ public:
 
     SDL_Color* colorReference();
 
-    void Colorizing(bool value) {useColorize = value;}
+    void setAutoColorizing(bool value) {useColorize = value;}
     SDL_Color getColorByState(MouseState ms);
 
 protected:
@@ -51,7 +51,9 @@ public:
     void setMouseState(MouseState state);
     virtual void setGeometry(SDL_Rect geometry);
     void bindHoverFunction(std::function<void()> function);
+    void bindUnhoverFunction(std::function<void()> function);
     void bindPressedFunction(std::function<void()> function);
+    void bindUnpressedFunction(std::function<void()> function);
 
     MouseState getMouseState();
     SDL_Rect getGeometry();
@@ -62,6 +64,7 @@ public:
     int* yReference();
     int* widthReference();
     int* heightReference();
+    bool isHover() { return isHoverNow; }
 
     bool hover(int x, int y);                                 // is mouse over
     bool pressed(int x, int y, bool press = true);                              // is mouse pressed
@@ -77,6 +80,7 @@ protected:
     SDL_Renderer* renderer;
     bool enable = true;
     bool drag = false;
+    bool isHoverNow = false;
 
     void addX(int value);
     void addY(int value);
@@ -85,7 +89,9 @@ protected:
     void addNormalized(int value);
 
     std::function<void()> hoverFunc;
+    std::function<void()> unhoverFunc;
     std::function<void()> pressedFunc;
+    std::function<void()> unpressedFunc;
 };
 
-#endif
+#endif // __WIDGET

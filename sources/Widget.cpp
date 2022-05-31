@@ -18,6 +18,14 @@ void Widget::bindPressedFunction(std::function<void()> function) {
     pressedFunc = function;
 }
 
+void Widget::bindUnhoverFunction(std::function<void()> function) {
+    unhoverFunc = function;
+}
+
+void Widget::bindUnpressedFunction(std::function<void()> function) {
+    unpressedFunc = function;
+}
+
 void Widget::render() {
 }
 
@@ -166,17 +174,18 @@ bool Widget::hover(int _x, int _y) {
         ms = mouseNone;
         return true;
     }
+    if (unhoverFunc != nullptr) unhoverFunc();
     return false;
 }
 
 bool Widget::pressed(int _x, int _y, bool press) {
     if (collisse(_x, _y) && ms != mousePressed && press) {
         ms = mousePressed;
-        if (pressedFunc != nullptr)
-            pressedFunc();
+        if (pressedFunc != nullptr) pressedFunc();
         return true;
     }
 
+    if (unpressedFunc != nullptr) unpressedFunc();
     return false;
 }
 

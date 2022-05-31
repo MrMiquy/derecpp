@@ -1,17 +1,16 @@
 #include "Widget.h"
 #include <vector>
-#ifndef PARENT
-#define PARENT
+#ifndef __PARENT
+#define __PARENT
 
 class Parent {
 public:
-    Parent();
-    ~Parent();
-
     void addChild(Widget* child);
+    void fixChildrenPos(bool value);
 
 protected:
+    bool isFixed = true;
     std::vector<Widget*> children;
 };
 
-#endif
+#endif // __PARENT

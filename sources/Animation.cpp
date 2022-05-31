@@ -6,15 +6,17 @@ bool intAnimation::animate() {
             if (*value >= to) {
                 stop();
                 *value = to;
+                return false;
             } else {
-                *value = counter * to / duration / (to / duration) / duration + from;
+                *value = counter * to / duration/ 500 / (to / duration/ 500) / (duration/ 500) + from;
             }
         } else {
             if (*value <= to) {
                 stop();
                 *value = to;
+                return false;
             } else {
-                *value = -(counter * to / duration / (to / duration) / duration) + from;
+                *value = -(counter * to / duration/ 500 / (to / duration/ 500) / (duration/ 500)) + from;
             }
         }
         counter++;
@@ -23,21 +25,28 @@ bool intAnimation::animate() {
     return false;
 }
 
+void intAnimation::addRange(int f, int t) {
+    from += f;
+    to += t;
+}
+
 bool uInt8Animation::animate() {
     if (animating) {
         if (from <= to) {
             if (*value >= to) {
                 stop();
                 *value = to;
+                return false;
             } else {
-                *value = counter * to / duration / (to / duration) / duration + from;
+                *value = counter * to / duration/ 500 / (to / duration/ 500) / (duration/ 500) + from;
             }
         } else {
             if (*value <= to) {
                 stop();
                 *value = to;
+                return false;
             } else {
-                *value = -(counter * to / duration / (to / duration) / duration) + from;
+                *value = -(counter * to / duration/ 500 / (to / duration/ 500) / (duration/ 500)) + from;
             }
         }
         counter++;
@@ -96,7 +105,7 @@ bool ColorAnimation::animate() {
         if (g.animate()) neededRender = true;
         if (b.animate()) neededRender = true;
         if (a.animate()) neededRender = true;
-        printf("color render: %d\n", neededRender);
+        printf("animating colors\n");
 
         return animating = neededRender;
     }
