@@ -6,6 +6,110 @@ Widget::Widget() {
 Widget::~Widget() {
 }
 
+void Widget::setDockGeometry(SDL_Rect dGeometry) {
+    dockGeometry = dGeometry;
+
+    if (dock != NoneDock) updateDock();
+}
+
+void Widget::setDock(Dock d, int m) {
+    dock = d;
+    updateDock();
+
+    if (m != 0) {
+        switch (dock) {
+            case TopLeftDock:
+                geometry.x += m;
+                margin.x += m;
+                geometry.y += m;
+                margin.y += m;
+                break;
+            case TopDock:
+                geometry.y += m;
+                margin.y += m;
+                break;
+            case TopRightDock:
+                geometry.x -= m;
+                margin.x -= m;
+                geometry.y += m;
+                margin.y += m;
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+void Widget::updateDock() {
+    switch (dock) {
+        case NoneDock:
+            break;
+        case TopLeftDock:
+            geometry.x = dockGeometry.x;
+            geometry.y = dockGeometry.y;
+            break;
+        case TopDock:
+            geometry.x = dockGeometry.w / 2 - geometry.w / 2 + dockGeometry.x;
+            geometry.y = dockGeometry.y;
+            break;
+        case TopRightDock:
+            geometry.x = dockGeometry.w - geometry.w;
+            geometry.y = dockGeometry.y;
+            break;
+
+        default:
+            break;
+    }
+    geometry.x += padding.x + margin.x;
+    geometry.y += padding.y + margin.y;
+    geometry.w -= padding.w - padding.x;
+    geometry.h -= padding.h - padding.y;
+}
+
+void Widget::setMargin(SDL_Rect _margin) {
+    geometry.x -= margin.x;
+    geometry.y -= margin.y;
+
+    margin.x = _margin.x - _margin.w;
+    margin.y = _margin.y - _margin.h;
+
+    geometry.x += margin.x;
+    geometry.y += margin.y;
+}
+
+SDL_Point Widget::getMargin() {
+    return margin;
+}
+
+void Widget::setPadding(SDL_Rect _padding) {
+    geometry.x -= padding.x;
+    geometry.y -= padding.y;
+    geometry.w += padding.w - padding.x;
+    geometry.h += padding.h - padding.y;
+
+    padding = _padding;
+
+    geometry.x += padding.x;
+    geometry.y += padding.y;
+    geometry.w -= padding.w - padding.x;
+    geometry.h -= padding.h - padding.y;
+}
+
+SDL_Rect Widget::getPadding() {
+    return padding;
+}
+
+void Widget::proportionalSizeW(float width) {
+    geometry.w = width / geometry.w * geometry.w;
+    geometry.h = width / geometry.w * geometry.h;
+}
+
+void Widget::proportionalSizeH(float height) {
+    geometry.w = height / geometry.h * geometry.w;
+    geometry.h = height / geometry.h * geometry.h;
+}
+
 void Widget::setRenderer(SDL_Renderer* _renderer) {
     renderer = _renderer;
 }
@@ -26,7 +130,20 @@ void Widget::bindUnpressedFunction(std::function<void()> function) {
     unpressedFunc = function;
 }
 
+void Widget::bindScrollUpFunction(std::function<void()> function) {
+    scrollUpFunc = function;
+}
+
+void Widget::bindScrollDownFunction(std::function<void()> function) {
+    scrollDownFunc = function;
+}
+
+void Widget::bindWinResizeFunction(std::function<void()> function) {
+    winResizeFunc = function;
+}
+
 void Widget::render() {
+    updateDock();
 }
 
 SDL_Rect Widget::getGeometry() {
@@ -54,7 +171,22 @@ int* Widget::heightReference() {
 }
 
 void Widget::setGeometry(SDL_Rect _geometry) {
+    if (geometry.x == 0 || geometry.y == 0 || geometry.w == 0 || geometry.h == 0) nativeGeometry = _geometry;
     geometry = _geometry;
+}
+
+void Widget::setPos(SDL_Point pos) {
+    geometry.x = pos.x;
+    geometry.y = pos.y;
+}
+
+void Widget::setSize(SDL_Point size) {
+    geometry.w = size.x;
+    geometry.h = size.y;
+}
+
+void Widget::setNativeGeometry(SDL_Rect _nativeGeometry) {
+    nativeGeometry = _nativeGeometry;
 }
 
 void Widget::setMouseState(MouseState state) {
@@ -187,6 +319,18 @@ bool Widget::pressed(int _x, int _y, bool press) {
 
     if (unpressedFunc != nullptr) unpressedFunc();
     return false;
+}
+
+void Widget::scrollUp() {
+    if (scrollUpFunc != nullptr) scrollUpFunc();
+}
+
+void Widget::scrollDown() {
+    if (scrollDownFunc != nullptr) scrollDownFunc();
+}
+
+void Widget::winResize() {
+    if (winResizeFunc != nullptr) winResizeFunc();
 }
 
 void Widget::addX(int value) {

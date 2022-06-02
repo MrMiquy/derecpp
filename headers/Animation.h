@@ -36,6 +36,7 @@ public:
     virtual void setValue(T* valueToAnimate) { value = valueToAnimate; }
     virtual T getRangeFrom() { return from; }
     virtual T getRangeTo() { return to; }
+    virtual T getValue() { return *value; }
 
     virtual void play() { animating = true; safeCallPlayFunc(); }
     virtual void stop() {
@@ -55,6 +56,12 @@ class intAnimation : public AnimationWrapper<int> {
 public:
     bool animate();
     void addRange(int from, int to);
+    void setRange(int _from, int _to) {
+        from = _from;
+        to = _to;
+        if (from == 0) from++;          // I added these increments because when one among these
+        if (to == 0) to++;              // values equals 0, member-function animate() works as not expected
+    }
 };
 
 class uInt8Animation : public AnimationWrapper<Uint8> {

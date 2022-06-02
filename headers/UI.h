@@ -6,6 +6,7 @@
 #include "Image.h"
 #include "Label.h"
 #include "Parent.h"
+#include "Grid.h"
 
 class UI {
 public:

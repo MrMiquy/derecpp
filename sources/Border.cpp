@@ -31,9 +31,9 @@ void Border::render() {
                 if (isFixed) {
                     child->render();
                 } else {
-                    child->setGeometry({child->getGeometry().x - geometry.x, child->getGeometry().y - geometry.y, child->getGeometry().w, child->getGeometry().h});
+                    child->setPos({child->getGeometry().x - geometry.x, child->getGeometry().y - geometry.y});
                     child->render();
-                    child->setGeometry({child->getGeometry().x + geometry.x, child->getGeometry().y + geometry.y, child->getGeometry().w, child->getGeometry().h});
+                    child->setPos({child->getGeometry().x + geometry.x, child->getGeometry().y + geometry.y});
                 }
             }
 

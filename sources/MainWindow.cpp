@@ -1,84 +1,55 @@
 #include "../headers/MainWindow.h"
 
 void MainWindow::initElements() {
-    art.setImage("art.png");
-    art.setPosition({10, 10});
-    art.setDraggable(true);
-    addChild(&b, &art);
+    grid.setTable(4, 3);
+    grid.setCellSize({128, 128});
+    grid.setColor({50, 37, 33, 255});
+    grid.setPadding({3, 3, 3, 3});
+    grid.setDock(TopRightDock);
+    grid.bindScrollUpFunction(std::bind(&MainWindow::gridScrollUp, this));
+    grid.bindScrollDownFunction(std::bind(&MainWindow::gridScrollDown, this));
+    grid.bindWinResizeFunction(std::bind(&MainWindow::gridWinResize, this));
+    addElement(&grid);
 
-    b.setGeometry({40, 40, 250, 250});
-    b.setColor({50, 37, 33, 255});
-    b.setHoverColor({70, 57, 53, 255});
-    b.setPressedColor({120, 107, 103, 255});
-    b.setAutoColorizing(false);
-    addElement(&b);
-    b.bindPressedFunction(std::bind(&MainWindow::buttonPressed, this));
-    b.bindHoverFunction(std::bind(&MainWindow::buttonHover, this));
-    b.bindUnhoverFunction(std::bind(&MainWindow::buttonUnhover, this));
-    b.bindUnpressedFunction(std::bind(&MainWindow::buttonUnpressed, this));
+    gridOffset.setDuration(75);
+    gridOffset.setValue(grid.yOffsetReference());
+    addAnimation(&gridOffset);
 
-    c.setCentre(200, 300);
-    c.setRadius(25);
-    c.setHoverColor({50, 50, 50, 255});
-    c.setPressedColor({150, 150, 150, 255});
-    c.setDraggable(true);
-    addElement(&c);
-
-    e.setGeometry({300, 100, 100, 50});
-    e.setColor({20, 100, 255, 155});
-    e.setHoverColor({255, 255, 255, 255});
-    addElement(&e);
-
-    l.setText("hello world");
-    l.setGeometry({0, 0, 220, 320});
-    l.setFont("helvetic.ttf", 18);
-    l.setColor({255,255,255,255});
-    l.setHoverColor({200,200,200,255});
-    l.setPressedColor({100,100,100,255});
-    l.setDraggable(true);
-    addElement(&l);
-
-    bWidth.setDuration(400);
-    bWidth.setValue(b.xReference());
-    bWidth.setLooped(true);
-    //bWidth.setStopFunc(std::bind(&MainWindow::reverseBColor, this));
-    addAnimation(&bWidth);
-
-    bColor.setDuration(300);
-    bColor.setRange(b.getColor(), b.getPressedColor());
-    bColor.setValue(b.colorReference());
-    addAnimation(&bColor);
+    art1.setImage("art1.png");
+    art2.setImage("art2.png");
+    art3.setImage("art3.png");
+    art4.setImage("art4.png");
+    art5.setImage("art5.png");
+    art6.setImage("art6.png");
+    art7.setImage("art7.png");
+    art8.setImage("art8.png");
+    art9.setImage("art9.png");
+    addChild(&grid, &art1);
+    addChild(&grid, &art2);
+    addChild(&grid, &art3);
+    addChild(&grid, &art4);
+    addChild(&grid, &art5);
+    addChild(&grid, &art6);
+    addChild(&grid, &art7);
+    addChild(&grid, &art8);
+    addChild(&grid, &art9);
 }
 
-void MainWindow::buttonPressed() {
-    bColor.setRange(bColor.getRangeFrom(), b.getPressedColor());
-    bColor.play();
-
-    bWidth.setRange(b.getGeometry().x, b.getGeometry().x + 50);
-    bWidth.play();
+void MainWindow::gridWinResize() {
+    grid.setDockGeometry({0, 0, winSize.x, winSize.y});
 }
 
-void MainWindow::buttonHover() {
-    bColor.setRange(bColor.getRangeFrom(), b.getHoverColor());
-    bColor.play();
-
-    if (!bWidth.isAnimating() || b.getGeometry().x > -150) {
-        bWidth.setRange(b.getGeometry().x, b.getGeometry().x - 50);
-        bWidth.play();
+void MainWindow::gridScrollUp() {
+    if (!gridOffset.isAnimating() && grid.getOffset().y < 0) {
+        gridOffset.setRange(grid.getOffset().y, grid.getOffset().y + grid.getCellSize().y);
+        gridOffset.play();
     }
 }
 
-void MainWindow::buttonUnhover() {
-    if (!bColor.isAnimating() && bColor.getRangeTo().r != b.getColor().r) {
-        bColor.setRange(bColor.getRangeFrom(), b.getColor());
-        bColor.play();
-    }
-}
-
-void MainWindow::buttonUnpressed() {
-    if (!bColor.isAnimating() || bColor.getRangeTo().r != b.getColor().r) {
-        bColor.setRange(bColor.getRangeFrom(), b.getColor());
-        bColor.play();
+void MainWindow::gridScrollDown() {
+    if (!gridOffset.isAnimating() && grid.getOffset().y > -(grid.getCol() * grid.getCellSize().y / 2)) {
+        gridOffset.setRange(grid.getOffset().y, grid.getOffset().y - grid.getCellSize().y);
+        gridOffset.play();
     }
 }
 

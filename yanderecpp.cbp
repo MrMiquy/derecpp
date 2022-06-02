@@ -41,10 +41,12 @@
 		<Unit filename="headers/Border.h" />
 		<Unit filename="headers/Circle.h" />
 		<Unit filename="headers/Ellipse.h" />
+		<Unit filename="headers/Grid.h" />
 		<Unit filename="headers/Image.h" />
 		<Unit filename="headers/Label.h" />
 		<Unit filename="headers/MainWindow.h" />
 		<Unit filename="headers/Parent.h" />
+		<Unit filename="headers/Scrollbar.h" />
 		<Unit filename="headers/UI.h" />
 		<Unit filename="headers/Widget.h" />
 		<Unit filename="sources/Animation.cpp" />
@@ -52,10 +54,12 @@
 		<Unit filename="sources/Border.cpp" />
 		<Unit filename="sources/Circle.cpp" />
 		<Unit filename="sources/Ellipse.cpp" />
+		<Unit filename="sources/Grid.cpp" />
 		<Unit filename="sources/Image.cpp" />
 		<Unit filename="sources/Label.cpp" />
 		<Unit filename="sources/MainWindow.cpp" />
 		<Unit filename="sources/Parent.cpp" />
+		<Unit filename="sources/Scrollbar.cpp" />
 		<Unit filename="sources/UI.cpp" />
 		<Unit filename="sources/Widget.cpp" />
 		<Unit filename="sources/main.cpp" />

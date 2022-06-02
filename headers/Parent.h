@@ -5,7 +5,7 @@
 
 class Parent {
 public:
-    void addChild(Widget* child);
+    virtual void addChild(Widget* child);
     void fixChildrenPos(bool value);
 
 protected:

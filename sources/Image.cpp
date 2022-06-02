@@ -22,6 +22,8 @@ void Image::setRenderer(SDL_Renderer* _renderer) {
 
     texture = loadTexture();
     SDL_QueryTexture(texture, NULL, NULL, &geometry.w, &geometry.h);    // Get texture's (image's) size;
+    nativeGeometry.w = geometry.w;
+    nativeGeometry.h = geometry.h;
 }
 
 void Image::render() {
@@ -33,24 +35,6 @@ SDL_Texture* Image::loadTexture() {
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, tempSurface);
     SDL_FreeSurface(tempSurface);
     return texture;
-}
-
-void Image::setPosition(SDL_Point position) {
-    geometry.x = position.x;
-    geometry.y = position.y;
-}
-
-void Image::setSize(SDL_Point _size) {
-    geometry.w = _size.x;
-    geometry.h = _size.y;
-}
-
-SDL_Point Image::getPosition() {
-    return {geometry.x, geometry.y};
-}
-
-SDL_Point Image::getSize() {
-    return {geometry.w, geometry.h};
 }
 
 SDL_Texture* Image::getTexture() {

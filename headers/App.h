@@ -28,6 +28,8 @@ public:
 private:
     int mouseX, mouseY;
     int mouseXo, mouseYo;
+    bool mouseUp = false;
+    bool mouseDown = false;
     bool neededRender = false;
     bool mouse = false;
     bool mouseChanged = false;

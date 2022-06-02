@@ -2,17 +2,19 @@
 
 class MainWindow : public UI {
 protected:
-    Border b;
-    intAnimation bWidth;
-    ColorAnimation bColor;
-
-    Circle c;
-
-    Ellipse e;
+    Grid grid;
+    intAnimation gridOffset;
 
     Image art;
-
-    Label l;
+    Image art1;
+    Image art2;
+    Image art3;
+    Image art4;
+    Image art5;
+    Image art6;
+    Image art7;
+    Image art8;
+    Image art9;
 
 public:
     MainWindow();
@@ -21,8 +23,8 @@ public:
 private:
     void initElements();
 
-    void buttonPressed();
-    void buttonHover();
-    void buttonUnpressed();
-    void buttonUnhover();
+    // Custom member-functions
+    void gridScrollUp();
+    void gridScrollDown();
+    void gridWinResize();
 };

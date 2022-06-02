@@ -26,8 +26,7 @@ bool intAnimation::animate() {
 }
 
 void intAnimation::addRange(int f, int t) {
-    from += f;
-    to += t;
+    setRange(from + f, to + t);
 }
 
 bool uInt8Animation::animate() {
@@ -105,7 +104,6 @@ bool ColorAnimation::animate() {
         if (g.animate()) neededRender = true;
         if (b.animate()) neededRender = true;
         if (a.animate()) neededRender = true;
-        printf("animating colors\n");
 
         return animating = neededRender;
     }

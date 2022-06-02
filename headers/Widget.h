@@ -10,6 +10,22 @@ enum MouseState {
     mousePressed,
 };
 
+enum Dock {
+    NoneDock,
+    TopDock,
+    LeftDock,
+    BottomDock,
+    RightDock,
+
+    CenterDock,
+
+    TopLeftDock,
+    TopRightDock,
+
+    BottomLeftDock,
+    BottomRightDock
+};
+
 class Colorize {
 public:
     Colorize();
@@ -45,38 +61,68 @@ public:
     Widget();
     ~Widget();
 
+    // UI
     virtual void setRenderer(SDL_Renderer* renderer);
     void setEnable(bool isEnable);
     void setDraggable(bool value);
     void setMouseState(MouseState state);
-    virtual void setGeometry(SDL_Rect geometry);
-    void bindHoverFunction(std::function<void()> function);
-    void bindUnhoverFunction(std::function<void()> function);
-    void bindPressedFunction(std::function<void()> function);
-    void bindUnpressedFunction(std::function<void()> function);
 
     MouseState getMouseState();
     SDL_Rect getGeometry();
     bool isEnable();
     bool isDraggable();
+    bool isHover() { return isHoverNow; }
+
+    // LOCATION
+    virtual void setGeometry(SDL_Rect geometry);
+    virtual void setNativeGeometry(SDL_Rect geometry);
+    virtual void setDockGeometry(SDL_Rect dockGeometry);
+    virtual void setPos(SDL_Point pos);
+    virtual void setSize(SDL_Point size);
+
+    virtual void setMargin(SDL_Rect margin);
+    virtual void setPadding(SDL_Rect padding);
+    void setDock(Dock dock, int margin = 0);
+    void updateDock();
+
+    virtual void proportionalSizeW(float width);
+    virtual void proportionalSizeH(float height);
+
+    SDL_Point getMargin();
+    SDL_Rect getPadding();
     SDL_Rect* geometryReference();
     int* xReference();
     int* yReference();
     int* widthReference();
     int* heightReference();
-    bool isHover() { return isHoverNow; }
 
-    bool hover(int x, int y);                                 // is mouse over
-    bool pressed(int x, int y, bool press = true);                              // is mouse pressed
+    // LOGIC
+    void bindHoverFunction(std::function<void()> function);
+    void bindUnhoverFunction(std::function<void()> function);
+    void bindPressedFunction(std::function<void()> function);
+    void bindUnpressedFunction(std::function<void()> function);
+    void bindScrollUpFunction(std::function<void()> function);
+    void bindScrollDownFunction(std::function<void()> function);
+    void bindWinResizeFunction(std::function<void()> function);
+
+    bool hover(int x, int y);                             // is mouse over
+    bool pressed(int x, int y, bool press = true);       // is mouse pressed
     bool collisse(int x, int y);
     void invertEnable();
+    virtual void scrollUp();
+    virtual void scrollDown();
+    virtual void winResize();
 
     virtual void render();
 
-    MouseState ms = mouseNone;
-
 protected:
+    Dock dock;
+    SDL_Point margin = {0, 0};
+    SDL_Rect padding = {0, 0, 0, 0};
     SDL_Rect geometry = {0, 0, 0, 0};
+    SDL_Rect dockGeometry = {0, 0, 0, 0};
+    SDL_Rect nativeGeometry = {0, 0, 0, 0};
+    MouseState ms = mouseNone;
     SDL_Renderer* renderer;
     bool enable = true;
     bool drag = false;
@@ -92,6 +138,9 @@ protected:
     std::function<void()> unhoverFunc;
     std::function<void()> pressedFunc;
     std::function<void()> unpressedFunc;
+    std::function<void()> scrollUpFunc;
+    std::function<void()> scrollDownFunc;
+    std::function<void()> winResizeFunc;
 };
 
 #endif // __WIDGET

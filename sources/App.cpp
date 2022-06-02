@@ -29,21 +29,34 @@ void App::handleEvents() {
             mouse = false;
             mouseChanged = true;
             break;
+        case SDL_MOUSEWHEEL:
+            if (event.wheel.y > 0) {
+                mouseUp = true;
+            } else if (event.wheel.y < 0) {
+                mouseDown = true;
+            }
+            break;
+
         case SDL_QUIT:
             run = false;
             break;
         case SDL_WINDOWEVENT:
-            if (event.window.event == SDL_WINDOWEVENT_RESIZED
-                  || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED
+            if (event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+                SDL_GetWindowPosition(window, &winPos.x, &winPos.y);
+                SDL_GetWindowSize(window,  &winSize.x,  &winSize.y);
+                backgroundGeometry = {0, 0, winSize.x, winSize.y};
+
+                for (Widget* widget : UIElements) {
+                    widget->winResize();
+                }
+                neededRender = true;
+            } else if (     event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED
                   || event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED
                   || event.window.event == SDL_WINDOWEVENT_EXPOSED
                   || event.window.event == SDL_WINDOWEVENT_RESTORED)
             {
-                SDL_GetWindowPosition(window, &winPos.x, &winPos.y);
-                SDL_GetWindowSize(window,  &winSize.x,  &winSize.y);
-                backgroundGeometry = {0, 0, winSize.x, winSize.y};
                 neededRender = true;
-            };
+            }
             break;
         default:
             break;
@@ -52,7 +65,6 @@ void App::handleEvents() {
 
 void App::update() {
     SDL_GetMouseState(&mouseX, &mouseY);
-
     if (mouseChanged) {
         if (mouse) {
             for (Widget* widget : concat(UIChildren, UIElements)) {
@@ -76,12 +88,26 @@ void App::update() {
             }
         }
         mouseChanged = false;
-    } else if (animate()) {
+    } if (animate()) {
         neededRender = true;
-    } else if (mouse && lastPressedWidget != NULL && lastPressedWidget->isDraggable()) {
+    } if (mouse && lastPressedWidget != NULL && lastPressedWidget->isDraggable()) {
         lastPressedWidget->setGeometry({mouseX - lastPressedWidget->getGeometry().w / 2, mouseY - lastPressedWidget->getGeometry().h / 2, lastPressedWidget->getGeometry().w, lastPressedWidget->getGeometry().h});
         neededRender = true;
     }
+    if (mouseUp) {
+        for (Widget* widget : UIElements) {
+            if (widget->collisse(mouseX, mouseY)) {
+                widget->scrollUp();
+            }
+        }
+    } else if (mouseDown) {
+        for (Widget* widget : UIElements) {
+            if (widget->collisse(mouseX, mouseY)) {
+                widget->scrollDown();
+            }
+        }
+    }
+    mouseUp = mouseDown = false;
     if (skipFrame < 2) {
         skipFrame++;
         return;
@@ -113,7 +139,6 @@ void App::render() {
     SDL_RenderFillRect(renderer, &backgroundGeometry);
     // --------------------------
     renderUI();
-    printf("rendering\n");
 
     SDL_RenderPresent(renderer);
 }
